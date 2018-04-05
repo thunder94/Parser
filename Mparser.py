@@ -23,7 +23,12 @@ def p_start(p):
     """start : INSTRUCTION
              | INSTRUCTION start
              | FORLOOP
-             | FORLOOP start"""
+             | FORLOOP start
+             | WHILELOOP
+             | WHILELOOP start
+             | IFELSE
+             | IFELSE start
+             """
     print(p[1])
     #if   len(p)==3: print("p[1]=", p[1])
     #else:           print("p[2]=", p[2])
@@ -181,6 +186,7 @@ def p_matrix_binary_operations(p):
         print(3, current_id)'''
 
 
+##czy tutaj na dole to instructions jest dobrze? bo dopuszcza, ze nie bedzie fora  tylko jakas instrukcja
 def p_for_loop(p):
     """FORLOOP : FOR ID '=' INTNUM ':' INTNUM '{' FORLOOP  '}'
                   | FOR ID '=' INTNUM ':' ID '{' FORLOOP  '}'
@@ -190,9 +196,40 @@ def p_for_loop(p):
     pass
 
 
-#def p_print(p):
-#    """EXPRESSION : PRINT ID
-#                  | PRINT '"' EXPRESSION '"' """
+def p_relation_op(p):
+    """RELATION_OP : E
+                    | '<'
+                    | '>'
+                    | LE
+                    | GE
+                    | NE
+                    """
+
+      
+## tak samo jak up z instructions
+def p_while_loop(p):
+    """WHILELOOP : WHILE '(' ID RELATION_OP INTNUM ')' '{' WHILELOOP  '}'
+                    | WHILE '(' ID RELATION_OP ID ')' '{' WHILELOOP  '}'
+                    | INSTRUCTIONS"""
+    pass
+
+
+def p_if_else(p):
+    """IFELSE : IF '(' ID RELATION_OP INTNUM ')' EXPRESSION ELSE IFELSE
+                | IF '(' ID RELATION_OP INTNUM ')' INSTRUCTIONS ELSE INSTRUCTIONS
+                | IF '(' ID RELATION_OP INTNUM ')' INSTRUCTIONS
+                | IF '(' ID RELATION_OP ID ')' EXPRESSION ELSE IFELSE
+                | IF '(' ID RELATION_OP ID ')' INSTRUCTIONS ELSE INSTRUCTIONS
+                | IF '(' ID RELATION_OP ID ')' INSTRUCTIONS
+                """
+
+    pass
+
+
+##nie dziala print expression
+# def p_print(p):
+#     """EXPRESSION : PRINT ID
+#                   | PRINT '"' EXPRESSION '"'"""
 
 
 parser = yacc.yacc()
