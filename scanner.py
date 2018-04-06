@@ -19,6 +19,7 @@ tokens = (
    'ID',
    'INTNUM',
    'FLOATNUM',
+   'STRING',
 
    'DOTADD',
    'DOTSUB',
@@ -62,6 +63,7 @@ t_SUBASSIGN = r'-='
 t_MULASSIGN = r'\*='
 t_DIVASSIGN = r'/='
 t_TRANSPOSE = r'\''
+t_STRING = r'\".*\"'
 
 t_LE = r'\<='
 t_GE = r'\>='

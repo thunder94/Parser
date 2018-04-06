@@ -60,7 +60,7 @@ def p_expression_var(p):
         p[0] = val
     else:
         p[0] = 0
-        print("%s not used\n" %p[1])
+        print("%s not used" %p[1])
 
 
 def p_expression_assignment(p):
@@ -204,8 +204,9 @@ def p_relation_op(p):
                     | GE
                     | NE
                     """
+    pass
 
-      
+
 ## tak samo jak up z instructions
 def p_while_loop(p):
     """WHILELOOP : WHILE '(' ID RELATION_OP INTNUM ')' '{' WHILELOOP  '}'
@@ -226,10 +227,11 @@ def p_if_else(p):
     pass
 
 
-##nie dziala print expression
-# def p_print(p):
-#     """EXPRESSION : PRINT ID
-#                   | PRINT '"' EXPRESSION '"'"""
+#chyba dziala
+def p_print(p):
+    """EXPRESSION : PRINT ID
+                  | PRINT STRING
+                  """
 
 
 parser = yacc.yacc()
