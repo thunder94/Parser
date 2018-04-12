@@ -186,6 +186,13 @@ def p_matrix_binary_operations(p):
         print(3, current_id)'''
 
 
+def p_complex_instruction(p):
+    """COMPLEX_INS : FORLOOP
+                    | WHILELOOP
+                    | IFELSE
+                    """
+    pass
+
 ##czy tutaj na dole to instructions jest dobrze? bo dopuszcza, ze nie bedzie fora  tylko jakas instrukcja
 def p_for_loop(p):
     """FORLOOP : FOR ID '=' INTNUM ':' INTNUM '{' FORLOOP  '}'
@@ -207,32 +214,50 @@ def p_relation_op(p):
     pass
 
 
-## tak samo jak up z instructions
+def p_expression_relation(p):
+    """RELATION_EXPR : ID RELATION_OP INTNUM
+                    | INTNUM RELATION_OP ID
+                    | ID RELATION_OP ID         
+            """
+    pass
+
+
+# tak samo jak up z instructions
 def p_while_loop(p):
-    """WHILELOOP : WHILE '(' ID RELATION_OP INTNUM ')' '{' WHILELOOP  '}'
-                    | WHILE '(' ID RELATION_OP ID ')' '{' WHILELOOP  '}'
+    """WHILELOOP : WHILE '(' RELATION_EXPR ')' '{' COMPLEX_INS  '}'
                     | INSTRUCTIONS"""
     pass
 
 
 def p_if_else(p):
-    """IFELSE : IF '(' ID RELATION_OP INTNUM ')' EXPRESSION ELSE IFELSE
-                | IF '(' ID RELATION_OP INTNUM ')' INSTRUCTIONS ELSE INSTRUCTIONS
-                | IF '(' ID RELATION_OP INTNUM ')' INSTRUCTIONS
-                | IF '(' ID RELATION_OP ID ')' EXPRESSION ELSE IFELSE
-                | IF '(' ID RELATION_OP ID ')' INSTRUCTIONS ELSE INSTRUCTIONS
-                | IF '(' ID RELATION_OP ID ')' INSTRUCTIONS
+    """IFELSE : IF '(' RELATION_EXPR ')' INSTRUCTIONS ELSE IFELSE
+                | IF '(' RELATION_EXPR ')' INSTRUCTIONS ELSE INSTRUCTIONS
+                | IF '(' RELATION_EXPR ')' INSTRUCTIONS
                 """
-
     pass
 
 
-#chyba dziala
+# chyba dziala
 def p_print(p):
     """EXPRESSION : PRINT ID
                   | PRINT STRING
                   """
 
+
+def p_jump_statement_continue(p):
+    """jump_statement : CONTINUE ';'"""
+    pass
+
+
+def p_jump_statement_break(p):
+    """jump_statement : BREAK ';'"""
+    pass
+
+
+##czy tutaj tez powinno sie dodac   boola do expression  >> p_expression_relation
+def p_jump_statement_return(p):
+    """jump_statement : RETURN EXPRESSION ';'"""
+    pass
 
 parser = yacc.yacc()
 
