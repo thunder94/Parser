@@ -195,11 +195,16 @@ def p_complex_instruction(p):
 
 ##czy tutaj na dole to instructions jest dobrze? bo dopuszcza, ze nie bedzie fora  tylko jakas instrukcja
 def p_for_loop(p):
-    """FORLOOP : FOR ID '=' INTNUM ':' INTNUM '{' FORLOOP  '}'
-                  | FOR ID '=' INTNUM ':' ID '{' FORLOOP  '}'
-                  | FOR ID '=' ID ':' INTNUM '{' FORLOOP  '}'
-                  | FOR ID '=' ID ':' ID '{' FORLOOP  '}'
-                  | INSTRUCTIONS"""
+    """FORLOOP : FOR ID '=' INTNUM ':' INTNUM '{' COMPLEX_INS  '}'
+                  | FOR ID '=' INTNUM ':' ID '{' COMPLEX_INS  '}'
+                  | FOR ID '=' ID ':' INTNUM '{' COMPLEX_INS  '}'
+                  | FOR ID '=' ID ':' ID '{' COMPLEX_INS  '}'
+                  
+                  | FOR ID '=' INTNUM ':' INTNUM '{' INSTRUCTIONS  '}'
+                  | FOR ID '=' INTNUM ':' ID '{' INSTRUCTIONS  '}'
+                  | FOR ID '=' ID ':' INTNUM '{' INSTRUCTIONS  '}'
+                  | FOR ID '=' ID ':' ID '{' INSTRUCTIONS  '}'
+                  """
     pass
 
 
@@ -215,20 +220,27 @@ def p_relation_op(p):
 
 
 def p_expression_relation(p):
-    """RELATION_EXPR : ID RELATION_OP INTNUM
-                    | INTNUM RELATION_OP ID
-                    | ID RELATION_OP ID         
-            """
+    """RELATION_EXPR : EXPRESSION RELATION_OP EXPRESSION
+        """
+                    #         ID RELATION_OP INTNUM
+                    # | INTNUM RELATION_OP ID
+                    # | ID RELATION_OP ID
+                    # | EXPRESSION RELATION_OP ID
+                    # | ID RELATION_OP EXPRESSION
+                    # | EXPRESSION RELATION_OP EXPRESSION
+
     pass
 
 
 # tak samo jak up z instructions
 def p_while_loop(p):
     """WHILELOOP : WHILE '(' RELATION_EXPR ')' '{' COMPLEX_INS  '}'
-                    | INSTRUCTIONS"""
+                    | WHILE '(' RELATION_EXPR ')' '{' INSTRUCTIONS  '}'
+                    """
     pass
 
 
+#tutaj dodac chyba complex inst   jeszcze
 def p_if_else(p):
     """IFELSE : IF '(' RELATION_EXPR ')' INSTRUCTIONS ELSE IFELSE
                 | IF '(' RELATION_EXPR ')' INSTRUCTIONS ELSE INSTRUCTIONS
@@ -237,7 +249,8 @@ def p_if_else(p):
     pass
 
 
-# chyba dziala
+# chyba dziala/   moze jeszcze PRINT EXPRESSION
+# print i,j   nie dziala
 def p_print(p):
     """EXPRESSION : PRINT ID
                   | PRINT STRING
@@ -245,18 +258,18 @@ def p_print(p):
 
 
 def p_jump_statement_continue(p):
-    """jump_statement : CONTINUE ';'"""
+    """EXPRESSION : CONTINUE ';'"""
     pass
 
 
 def p_jump_statement_break(p):
-    """jump_statement : BREAK ';'"""
+    """EXPRESSION : BREAK ';'"""
     pass
 
 
 ##czy tutaj tez powinno sie dodac   boola do expression  >> p_expression_relation
 def p_jump_statement_return(p):
-    """jump_statement : RETURN EXPRESSION ';'"""
+    """EXPRESSION : RETURN EXPRESSION ';'"""
     pass
 
 parser = yacc.yacc()
