@@ -193,7 +193,7 @@ def p_complex_instruction(p):
                     """
     pass
 
-##czy tutaj na dole to instructions jest dobrze? bo dopuszcza, ze nie bedzie fora  tylko jakas instrukcja
+
 def p_for_loop(p):
     """FORLOOP : FOR ID '=' INTNUM ':' INTNUM '{' COMPLEX_INS  '}'
                   | FOR ID '=' INTNUM ':' ID '{' COMPLEX_INS  '}'
@@ -240,19 +240,25 @@ def p_while_loop(p):
     pass
 
 
-#tutaj dodac chyba complex inst   jeszcze
 def p_if_else(p):
-    """IFELSE : IF '(' RELATION_EXPR ')' INSTRUCTIONS ELSE IFELSE
-                | IF '(' RELATION_EXPR ')' INSTRUCTIONS ELSE INSTRUCTIONS
+    """IFELSE : IF '(' RELATION_EXPR ')' INSTRUCTIONS ELSE INSTRUCTIONS
+                | IF '(' RELATION_EXPR ')' INSTRUCTIONS ELSE COMPLEX_INS
+                | IF '(' RELATION_EXPR ')' COMPLEX_INS ELSE INSTRUCTIONS
+                | IF '(' RELATION_EXPR ')' COMPLEX_INS ELSE COMPLEX_INS
                 | IF '(' RELATION_EXPR ')' INSTRUCTIONS
                 """
     pass
 
 
-# chyba dziala/   moze jeszcze PRINT EXPRESSION
-# print i,j   nie dziala
+def p_ids(p):
+    """IDS : ID ',' IDS
+            | ID
+            """
+    pass
+
+
 def p_print(p):
-    """EXPRESSION : PRINT ID
+    """EXPRESSION : PRINT IDS
                   | PRINT STRING
                   """
 
