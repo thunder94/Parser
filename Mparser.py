@@ -7,6 +7,8 @@ symtab = {}
 tokens = scanner.tokens
 
 precedence = (
+   ("nonassoc", 'ONLYIF'),
+   ("nonassoc", 'ELSE'),
    ("right", '='),
    ("left", '+', '-'),
    ("left", '*', '/'),
@@ -16,7 +18,10 @@ precedence = (
 
 
 def p_error(p):
-    print("syntax error in line %d" % p.lineno)
+    if p:
+        print("Syntax error at line {0}: LexToken({1}, '{2}')".format(p.lineno, p.type, p.value))
+    else:
+        print("Unexpected end of input")
 
 
 def p_start(p):
@@ -29,7 +34,7 @@ def p_start(p):
              | IFELSE
              | IFELSE start
              """
-    print(p[1])
+    #print(p[1])
     #if   len(p)==3: print("p[1]=", p[1])
     #else:           print("p[2]=", p[2])
 
@@ -197,15 +202,14 @@ def p_row(p):
     """ROW : EXPRESSION
            | EXPRESSION ',' ROW
            """
-    print(p[1])
-    print("HI")
     pass
 
 
 def p_matrix_init(p):
-    """EXPRESSION : '[' MATRIX_VALUES ']' 
+    """EXPRESSION : '[' MATRIX_VALUES ']'
         """
     pass
+
 
 def p_complex_instruction(p):
     """COMPLEX_INS : FORLOOP
@@ -215,16 +219,17 @@ def p_complex_instruction(p):
     pass
 
 
+def p_instructions_block(p):
+    """INSTR_BLOCK : COMPLEX_INS
+                    | INSTRUCTIONS
+                    """
+    pass
+
 def p_for_loop(p):
-    """FORLOOP : FOR ID '=' INTNUM ':' INTNUM '{' COMPLEX_INS  '}'
-                  | FOR ID '=' INTNUM ':' ID '{' COMPLEX_INS  '}'
-                  | FOR ID '=' ID ':' INTNUM '{' COMPLEX_INS  '}'
-                  | FOR ID '=' ID ':' ID '{' COMPLEX_INS  '}'
-                  
-                  | FOR ID '=' INTNUM ':' INTNUM '{' INSTRUCTIONS  '}'
-                  | FOR ID '=' INTNUM ':' ID '{' INSTRUCTIONS  '}'
-                  | FOR ID '=' ID ':' INTNUM '{' INSTRUCTIONS  '}'
-                  | FOR ID '=' ID ':' ID '{' INSTRUCTIONS  '}'
+    """FORLOOP : FOR ID '=' INTNUM ':' INTNUM '{' INSTR_BLOCK  '}'
+                  | FOR ID '=' INTNUM ':' ID '{' INSTR_BLOCK  '}'
+                  | FOR ID '=' ID ':' INTNUM '{' INSTR_BLOCK  '}'
+                  | FOR ID '=' ID ':' ID '{' INSTR_BLOCK  '}'
                   """
     pass
 
@@ -240,6 +245,7 @@ def p_relation_op(p):
     pass
 
 
+#do  4/2 > 1/2  cos takiego zeby przechodzilo,   expression jest za ogolne teraz
 def p_expression_relation(p):
     """RELATION_EXPR : EXPRESSION RELATION_OP EXPRESSION
         """
@@ -255,18 +261,14 @@ def p_expression_relation(p):
 
 # tak samo jak up z instructions
 def p_while_loop(p):
-    """WHILELOOP : WHILE '(' RELATION_EXPR ')' '{' COMPLEX_INS  '}'
-                    | WHILE '(' RELATION_EXPR ')' '{' INSTRUCTIONS  '}'
+    """WHILELOOP : WHILE '(' RELATION_EXPR ')' '{' INSTR_BLOCK  '}'
                     """
     pass
 
 
 def p_if_else(p):
-    """IFELSE : IF '(' RELATION_EXPR ')' INSTRUCTIONS ELSE INSTRUCTIONS
-                | IF '(' RELATION_EXPR ')' INSTRUCTIONS ELSE COMPLEX_INS
-                | IF '(' RELATION_EXPR ')' COMPLEX_INS ELSE INSTRUCTIONS
-                | IF '(' RELATION_EXPR ')' COMPLEX_INS ELSE COMPLEX_INS
-                | IF '(' RELATION_EXPR ')' INSTRUCTIONS
+    """IFELSE : IF '(' RELATION_EXPR ')' INSTR_BLOCK %prec ONLYIF
+                | IF '(' RELATION_EXPR ')' INSTR_BLOCK ELSE INSTR_BLOCK
                 """
     pass
 
@@ -284,19 +286,25 @@ def p_print(p):
                   """
 
 
+def p_jump_statement(p):
+    """INSTRUCTION : JUMP_CONTINUE
+                   | JUMP_BREAK
+                   | JUMP_RETURN
+                   """
+
 def p_jump_statement_continue(p):
-    """EXPRESSION : CONTINUE ';'"""
+    """JUMP_CONTINUE : CONTINUE ';'"""
     pass
 
 
 def p_jump_statement_break(p):
-    """EXPRESSION : BREAK ';'"""
+    """JUMP_BREAK : BREAK ';'"""
     pass
 
 
 ##czy tutaj tez powinno sie dodac   boola do expression  >> p_expression_relation
 def p_jump_statement_return(p):
-    """EXPRESSION : RETURN EXPRESSION ';'"""
+    """JUMP_RETURN : RETURN EXPRESSION ';'"""
     pass
 
 parser = yacc.yacc()
