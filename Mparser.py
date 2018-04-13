@@ -186,6 +186,27 @@ def p_matrix_binary_operations(p):
         print(3, current_id)'''
 
 
+def p_matrix_values(p):
+    """MATRIX_VALUES : ROW
+                     | ROW ';' MATRIX_VALUES
+        """
+    pass
+
+
+def p_row(p):
+    """ROW : EXPRESSION
+           | EXPRESSION ',' ROW
+           """
+    print(p[1])
+    print("HI")
+    pass
+
+
+def p_matrix_init(p):
+    """EXPRESSION : '[' MATRIX_VALUES ']' 
+        """
+    pass
+
 def p_complex_instruction(p):
     """COMPLEX_INS : FORLOOP
                     | WHILELOOP
