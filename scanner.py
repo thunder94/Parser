@@ -33,10 +33,7 @@ tokens = (
    'GE',
    'NE',
    'E',
-   'TRANSPOSE',
-   'COMMENT'
-   
-
+   'TRANSPOSE'
 )
 
 reserved = {

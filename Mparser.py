@@ -9,11 +9,12 @@ tokens = scanner.tokens
 precedence = (
    ("nonassoc", 'ONLYIF'),
    ("nonassoc", 'ELSE'),
-   ("right", '='),
-   ("left", '+', '-'),
-   ("left", '*', '/'),
+   ("right", '=', 'ADDASSIGN', 'SUBASSIGN', 'MULASSIGN', 'DIVASSIGN'),
+   ("nonassoc", '<', '>', 'E', 'NE', 'GE', 'LE'),
+   ("left", '+', '-', 'DOTADD', 'DOTSUB'),
+   ("left", '*', '/', 'DOTMUL', 'DOTDIV'),
+   ("left", "TRANSPOSE"),
    ("right", 'UMINUS'),
-   #("left", 'MASSIGN'),
 )
 
 
@@ -295,33 +296,10 @@ def p_jump_statement_break(p):
     pass
 
 
-##czy tutaj tez powinno sie dodac   boola do expression  >> p_expression_relation
 def p_jump_statement_return(p):
     """JUMP_RETURN : RETURN EXPRESSION ';'"""
     pass
 
+
 parser = yacc.yacc()
-
-#def p_program(p):
-#    """program : instructions_opt"""
-
-
-#def p_instructions_opt_1(p):
-#    """instructions_opt : instructions """
-
-
-#def p_instructions_opt_2(p):
-#    """instructions_opt : """
-
-
-#def p_instructions_1(p):
-#    """instructions : instructions instruction """
-
-
-#def p_instructions_2(p):
-#    """instructions : instruction """
-
-
-# to finish the grammar
-# ....
 
