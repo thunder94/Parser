@@ -28,16 +28,10 @@ def p_error(p):
 def p_start(p):
     """start : INSTRUCTION
              | INSTRUCTION start
-             | FORLOOP
-             | FORLOOP start
-             | WHILELOOP
-             | WHILELOOP start
-             | IFELSE
-             | IFELSE start
+             | COMPLEX_INS start
+             | COMPLEX_INS
              """
     #print(p[1])
-    #if   len(p)==3: print("p[1]=", p[1])
-    #else:           print("p[2]=", p[2])
 
 
 def p_instructions(p):
@@ -53,9 +47,84 @@ def p_instruction(p):
         p[0] = p[1]
 
 
+def p_print(p):
+    """INSTRUCTION : PRINT IDS ';'
+                  | PRINT STRING ';'
+                  """
+
+
+def p_ids(p):
+    """IDS : ID ',' IDS
+            | ID
+            """
+    pass
+
+
+def p_jump_statement(p):
+    """INSTRUCTION : JUMP_CONTINUE
+                   | JUMP_BREAK
+                   | JUMP_RETURN"""
+
+
+def p_jump_statement_continue(p):
+    """JUMP_CONTINUE : CONTINUE ';'"""
+    pass
+
+
+def p_jump_statement_break(p):
+    """JUMP_BREAK : BREAK ';'"""
+    pass
+
+
+def p_jump_statement_return(p):
+    """JUMP_RETURN : RETURN EXPRESSION ';'"""
+    pass
+
+
+def p_complex_instruction(p):
+    """COMPLEX_INS : FORLOOP
+                   | WHILELOOP
+                   | IFELSE """
+    pass
+
+
+def p_for_loop(p):
+    """FORLOOP : FOR ID '=' INTNUM ':' INTNUM '{' INSTR_BLOCK  '}'
+                  | FOR ID '=' INTNUM ':' ID '{' INSTR_BLOCK  '}'
+                  | FOR ID '=' ID ':' INTNUM '{' INSTR_BLOCK  '}'
+                  | FOR ID '=' ID ':' ID '{' INSTR_BLOCK  '}'
+                  """
+    pass
+
+
+def p_while_loop(p):
+    """WHILELOOP : WHILE '(' RELATION_EXPR ')' '{' INSTR_BLOCK  '}'
+                    """
+    pass
+
+
+def p_if_else(p):
+    """IFELSE : IF '(' RELATION_EXPR ')' INSTR_BLOCK %prec ONLYIF
+                | IF '(' RELATION_EXPR ')' INSTR_BLOCK ELSE INSTR_BLOCK
+                """
+    pass
+
+
+def p_instructions_block(p):
+    """INSTR_BLOCK : COMPLEX_INS
+                    | INSTRUCTIONS
+                    """
+    pass
+
+
+def p_number(p):
+    """NUMBER : INTNUM
+              | FLOATNUM"""
+    p[0] = p[1]
+
+
 def p_expression_number(p):
-    """EXPRESSION : INTNUM
-                | FLOATNUM"""
+    """EXPRESSION : NUMBER"""
     p[0] = p[1]
 
 
@@ -110,7 +179,7 @@ def p_matrix_special_init(p):
 
 
 def p_matrix_element_modify(p):
-    """EXPRESSION : ID '[' INTNUM ',' INTNUM ']' '=' INTNUM"""
+    """EXPRESSION : ID '[' INTNUM ',' INTNUM ']' '=' NUMBER"""
     p[0] = p[8]
     symtab[p[1]][p[3]][p[5]] = p[8]
 
@@ -170,26 +239,10 @@ def p_matrix_binary_operations(p):
     p[0] = result
 
 
-#current_id = None
-#current_matrix_row = None
-
-
-'''def p_matrix_init(p):
-    """EXPRESSION : '[' ROW %prec MASSIGN
-       ROW        : INTNUM ',' ROW
-                  | INTNUM ']' """
-    global current_id
-    if p[1] == '[':
-        current_id = p[1]
-        symtab[current_id] = [[]]
-        p[0] = [[]]
-        print(5, current_id)
-    elif len(p) == 4:
-        p[0] = p[1]
-        print(4, current_id)
-    elif len(p) == 3:
-        p[0] = p[1]
-        print(3, current_id)'''
+def p_matrix_init(p):
+    """EXPRESSION : '[' MATRIX_VALUES ']'
+        """
+    pass
 
 
 def p_matrix_values(p):
@@ -200,39 +253,9 @@ def p_matrix_values(p):
 
 
 def p_row(p):
-    """ROW : EXPRESSION
-           | EXPRESSION ',' ROW
+    """ROW : NUMBER
+           | NUMBER ',' ROW
            """
-    pass
-
-
-def p_matrix_init(p):
-    """EXPRESSION : '[' MATRIX_VALUES ']'
-        """
-    pass
-
-
-def p_complex_instruction(p):
-    """COMPLEX_INS : FORLOOP
-                    | WHILELOOP
-                    | IFELSE
-                    """
-    pass
-
-
-def p_instructions_block(p):
-    """INSTR_BLOCK : COMPLEX_INS
-                    | INSTRUCTIONS
-                    """
-    pass
-
-
-def p_for_loop(p):
-    """FORLOOP : FOR ID '=' INTNUM ':' INTNUM '{' INSTR_BLOCK  '}'
-                  | FOR ID '=' INTNUM ':' ID '{' INSTR_BLOCK  '}'
-                  | FOR ID '=' ID ':' INTNUM '{' INSTR_BLOCK  '}'
-                  | FOR ID '=' ID ':' ID '{' INSTR_BLOCK  '}'
-                  """
     pass
 
 
@@ -250,54 +273,6 @@ def p_relation_op(p):
 def p_expression_relation(p):
     """RELATION_EXPR : EXPRESSION RELATION_OP EXPRESSION
         """
-    pass
-
-
-def p_while_loop(p):
-    """WHILELOOP : WHILE '(' RELATION_EXPR ')' '{' INSTR_BLOCK  '}'
-                    """
-    pass
-
-
-def p_if_else(p):
-    """IFELSE : IF '(' RELATION_EXPR ')' INSTR_BLOCK %prec ONLYIF
-                | IF '(' RELATION_EXPR ')' INSTR_BLOCK ELSE INSTR_BLOCK
-                """
-    pass
-
-
-def p_ids(p):
-    """IDS : ID ',' IDS
-            | ID
-            """
-    pass
-
-
-def p_print(p):
-    """INSTRUCTION : PRINT IDS ';'
-                  | PRINT STRING ';'
-                  """
-
-
-def p_jump_statement(p):
-    """INSTRUCTION : JUMP_CONTINUE
-                   | JUMP_BREAK
-                   | JUMP_RETURN
-                   """
-
-
-def p_jump_statement_continue(p):
-    """JUMP_CONTINUE : CONTINUE ';'"""
-    pass
-
-
-def p_jump_statement_break(p):
-    """JUMP_BREAK : BREAK ';'"""
-    pass
-
-
-def p_jump_statement_return(p):
-    """JUMP_RETURN : RETURN EXPRESSION ';'"""
     pass
 
 
