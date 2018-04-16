@@ -225,6 +225,7 @@ def p_instructions_block(p):
                     """
     pass
 
+
 def p_for_loop(p):
     """FORLOOP : FOR ID '=' INTNUM ':' INTNUM '{' INSTR_BLOCK  '}'
                   | FOR ID '=' INTNUM ':' ID '{' INSTR_BLOCK  '}'
@@ -245,21 +246,12 @@ def p_relation_op(p):
     pass
 
 
-#do  4/2 > 1/2  cos takiego zeby przechodzilo,   expression jest za ogolne teraz
 def p_expression_relation(p):
     """RELATION_EXPR : EXPRESSION RELATION_OP EXPRESSION
         """
-                    #         ID RELATION_OP INTNUM
-                    # | INTNUM RELATION_OP ID
-                    # | ID RELATION_OP ID
-                    # | EXPRESSION RELATION_OP ID
-                    # | ID RELATION_OP EXPRESSION
-                    # | EXPRESSION RELATION_OP EXPRESSION
-
     pass
 
 
-# tak samo jak up z instructions
 def p_while_loop(p):
     """WHILELOOP : WHILE '(' RELATION_EXPR ')' '{' INSTR_BLOCK  '}'
                     """
@@ -281,8 +273,8 @@ def p_ids(p):
 
 
 def p_print(p):
-    """EXPRESSION : PRINT IDS
-                  | PRINT STRING
+    """INSTRUCTION : PRINT IDS ';'
+                  | PRINT STRING ';'
                   """
 
 
@@ -291,6 +283,7 @@ def p_jump_statement(p):
                    | JUMP_BREAK
                    | JUMP_RETURN
                    """
+
 
 def p_jump_statement_continue(p):
     """JUMP_CONTINUE : CONTINUE ';'"""
