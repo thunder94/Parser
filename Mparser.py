@@ -29,8 +29,7 @@ def p_start(p):
     """start : INSTRUCTION
              | INSTRUCTION start
              | COMPLEX_INS start
-             | COMPLEX_INS
-             """
+             | COMPLEX_INS"""
     #print(p[1])
 
 
@@ -40,11 +39,9 @@ def p_instructions(p):
     p[0] = p[1]
 
 
-def p_instruction(p):
-    """INSTRUCTION : EXPRESSION ';'
-                   | """
-    if len(p) == 3:
-        p[0] = p[1]
+def p_instruction_end(p):
+    """INSTRUCTION : INSTRUCTION ';'"""
+    p[0] = p[1]
 
 
 def p_print(p):
@@ -98,22 +95,19 @@ def p_for_loop(p):
 
 
 def p_while_loop(p):
-    """WHILELOOP : WHILE '(' RELATION_EXPR ')' '{' INSTR_BLOCK  '}'
-                    """
+    """WHILELOOP : WHILE '(' RELATION_EXPR ')' '{' INSTR_BLOCK  '}' """
     pass
 
 
 def p_if_else(p):
     """IFELSE : IF '(' RELATION_EXPR ')' INSTR_BLOCK %prec ONLYIF
-                | IF '(' RELATION_EXPR ')' INSTR_BLOCK ELSE INSTR_BLOCK
-                """
+                | IF '(' RELATION_EXPR ')' INSTR_BLOCK ELSE INSTR_BLOCK """
     pass
 
 
 def p_instructions_block(p):
     """INSTR_BLOCK : COMPLEX_INS
-                    | INSTRUCTIONS
-                    """
+                    | INSTRUCTIONS """
     pass
 
 
@@ -139,7 +133,7 @@ def p_expression_var(p):
 
 
 def p_expression_assignment(p):
-    """EXPRESSION : ID '=' EXPRESSION"""
+    """INSTRUCTION : ID '=' EXPRESSION"""
     p[0] = p[3]
     symtab[p[1]] = p[3]
 
@@ -179,7 +173,7 @@ def p_matrix_special_init(p):
 
 
 def p_matrix_element_modify(p):
-    """EXPRESSION : ID '[' INTNUM ',' INTNUM ']' '=' NUMBER"""
+    """INSTRUCTION : ID '[' INTNUM ',' INTNUM ']' '=' NUMBER"""
     p[0] = p[8]
     symtab[p[1]][p[3]][p[5]] = p[8]
 
@@ -196,10 +190,10 @@ def p_matrix_transpose(p):
 
 
 def p_special_assignment(p):
-    """EXPRESSION : ID ADDASSIGN ID
-                  | ID SUBASSIGN ID
-                  | ID MULASSIGN ID
-                  | ID DIVASSIGN ID"""
+    """INSTRUCTION : ID ADDASSIGN ID
+                   | ID SUBASSIGN ID
+                   | ID MULASSIGN ID
+                   | ID DIVASSIGN ID"""
     if   p[2] == '+=':
         p[0] = symtab[p[1]] + symtab[p[3]]
         symtab[p[1]] = symtab[p[1]] + symtab[p[3]]
